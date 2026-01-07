@@ -1,7 +1,12 @@
-import Header from "./Header.jsx";
+import ExpenseItem from "./components/ExpenseItem.jsx";
+import "./components/ExpenseItem.css";
 
-function App() {
-  return <Header />;
-}
+const App = () => {
+  return (
+    <div className="app">
+      <ExpenseItem />
+    </div>
+  );
+};
 
 export default App;

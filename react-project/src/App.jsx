@@ -4,11 +4,13 @@ import NewExpense from "./components/NewExpense/NewExpense.jsx";
 const App = () => {
   const expenses = [
     {
+      id:100,
       date: new Date(2024, 10, 12),
       title: "New book1",
       price: 30.99,
     },
     {
+      id:101,
       date: new Date(2025, 7, 12),
       title: "New book2",
       price: 99.3,

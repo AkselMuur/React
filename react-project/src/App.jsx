@@ -5,7 +5,7 @@ import NewExpense from "./components/NewExpense/NewExpense.jsx";
 const App = () => {
   const [filteredYear, setFilteredYear] = useState("2025");
 
-  const expenses = [
+  const [expenses, setExpenses] = useState([
     {
       id:100,
       date: new Date(2027, 10, 12),
@@ -14,7 +14,7 @@ const App = () => {
     },
     {
       id:101,
-      date: new Date(2025, 7, 12),
+      date: new Date(2026, 7, 12),
       title: "New book2",
       price: 99.3,
     },
@@ -24,11 +24,12 @@ const App = () => {
       title: "New bag",
       price: 9.3,
     },
-  ];
+  ]);
 
   const addExpenseHandler = (expense) => {
-    console.log('In app.jsx');
-    console.log(expense);
+    setExpenses((prevExpenses) => {
+      return [expense, ...prevExpenses];
+    });
   };
 
   const filterChangeHandler = (selectedYear) => {

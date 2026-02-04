@@ -21,7 +21,7 @@ const Expenses = (props) => {
                 onChangeFilter={props.onChangeFilter} 
             />
 
-            {filteredExpenses.length === 0 && <p>No expenses found.</p>}
+            {filteredExpenses.length === 0 && <p className="expenses-list__fallback">No expenses found.</p>}
 
             {filteredExpenses.length > 0 &&
                 filteredExpenses.map((expense) => (

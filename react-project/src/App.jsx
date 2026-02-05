@@ -5,32 +5,15 @@ import NewExpense from "./components/NewExpense/NewExpense.jsx";
 const App = () => {
   const [filteredYear, setFilteredYear] = useState("2025");
 
-  const [expenses, setExpenses] = useState(() => {
-    const expensesFromLS = JSON.parse(localStorage.getItem("expenses"));
-    return expensesFromLS || [];
-  });
-/*
-  const [expenses, setExpenses] = useState([
-    {
-      id: 100,
-      date: new Date(2027, 10, 12),
-      title: "New book1",
-      price: 30.99,
-    },
-    {
-      id: 101,
-      date: new Date(2026, 7, 12),
-      title: "New book2",
-      price: 99.3,
-    },
-    {
-      id: 102,
-      date: new Date(2026, 7, 12),
-      title: "New bag",
-      price: 9.3,
-    },
-  ]);
-  */
+  const [expenses, setExpenses] = useState([]);
+  fetch("http://localhost:8001/expenses")
+    .then((response) => {
+      return response.json();
+    })
+    .then((responseData) => {
+      setExpenses(responseData.expenses);
+    });
+  console.log(expenses);
 
   useEffect(() => {
     localStorage.setItem("expenses", JSON.stringify(expenses));

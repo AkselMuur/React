@@ -1,5 +1,6 @@
 # React + Vite
 
+Pooleli ülesanne 13. juhend 19 lehekülg 8 tegemata
 
 Start program
 "npm run dev"
@@ -7,30 +8,13 @@ Start program
 Sulge programm
 "control + C"
 
-
+Start Backend server
+npm start
 
 React hook = special function
-useState() = on of react hooks. 
-
+useState() = on of react hooks.
 
 function MyComponent
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

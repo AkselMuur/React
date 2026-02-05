@@ -47,7 +47,7 @@ const ExpenseForm = (props) => {
   };
 
   return (
-    <Fragment>
+    <>
       {error && (
         <Error
           title={error.title}
@@ -93,7 +93,7 @@ const ExpenseForm = (props) => {
           <button type="submit">Add Expense</button>
         </div>
       </form>
-    </Fragment>
+    </>
   );
 };
 

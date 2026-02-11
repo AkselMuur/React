@@ -11,6 +11,8 @@ Sulge programm
 Start Backend server
 npm start
 
+
+
 React hook = special function
 useState() = on of react hooks.
 

@@ -1,7 +1,7 @@
 import React from "react";
 import ExpensesFilter from "./ExpensesFilter";
-import ExpenseItem from "./ExpenseItem";
 import "./Expenses.css";
+import ExpensesList from "./ExpensesList";
 
 const Expenses = (props) => {
   const filteredExpenses = props.expenses.filter((expense) => {
@@ -18,23 +18,10 @@ const Expenses = (props) => {
         onChangeFilter={props.onChangeFilter}
       />
 
-      {filteredExpenses.length === 0 && (
-        <p className="expenses-list__fallback">No expenses found.</p>
-      )}
-
-      {filteredExpenses.length > 0 &&
-        filteredExpenses.map((expense) => (
-          <ExpenseItem
-            key={expense.id}
-            title={expense.title}
-            price={expense.price}
-            date={
-              expense.date instanceof Date
-                ? expense.date
-                : new Date(expense.date)
-            }
-          />
-        ))}
+      <ExpensesList
+        filteredExpenses={filteredExpenses}
+        isLoading={props.isLoading}
+      />
     </div>
   );
 };

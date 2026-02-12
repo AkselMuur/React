@@ -10,6 +10,7 @@ import NewExpense from "./components/NewExpense/NewExpense.jsx";
 import Error from "./components/UI/Error.jsx";
 import MainHeader from "./components/MainHeader/MainHeader.jsx";
 import Login from "./components/Login/Login.jsx";
+import Home from "./components/Home/Home.jsx";
 
 export const ThemeContext = createContext(null);
 
@@ -116,17 +117,17 @@ const App = () => {
     setFilteredYear(selectedYear);
   };
 
-  const logoutHandler=() => {
-    localStorage.removeItem('isLoggedUser')
-    setLoggedIn(false)
-  }
+  const logoutHandler = () => {
+    localStorage.removeItem("isLoggedUser");
+    setLoggedIn(false);
+  };
 
   return (
     <div className="App">
       <MainHeader isAuthenticated={loggedIn} onLogout={logoutHandler} />
       <main>
-        {!loggedIn && <Login onLogin={loginHandler}/>}
-        {loggedIn && <Home/>}
+        {!loggedIn && <Login onLogin={loginHandler} />}
+        {loggedIn && <Home />}
       </main>
       <div>
         {showError && <Error title={error.title} message={error.message} />}

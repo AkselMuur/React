@@ -11,6 +11,7 @@ import Error from "./components/UI/Error.jsx";
 import MainHeader from "./components/MainHeader/MainHeader.jsx";
 import Login from "./components/Login/Login.jsx";
 import Home from "./components/Home/Home.jsx";
+import AuthContext from "./components/store/auth-context.jsx";
 
 export const ThemeContext = createContext(null);
 
@@ -123,8 +124,14 @@ const App = () => {
   };
 
   return (
+    <AuthContext.Provider value={
+      {
+        loggedIn: loggedIn,
+        onLogout: logoutHandler
+      }
+    }>
     <div className="App">
-      <MainHeader isAuthenticated={loggedIn} onLogout={logoutHandler} />
+      <MainHeader onLogout={logoutHandler} />
       <main>
         {!loggedIn && <Login onLogin={loginHandler} />}
         {loggedIn && <Home />}
@@ -141,6 +148,7 @@ const App = () => {
         />
       </div>
     </div>
+    </AuthContext.Provider>
   );
 };
 

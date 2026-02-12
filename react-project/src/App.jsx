@@ -1,9 +1,50 @@
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  Fragment,
+} from "react";
 import Expenses from "./components/Expenses/Expenses.jsx";
 import NewExpense from "./components/NewExpense/NewExpense.jsx";
 import Error from "./components/UI/Error.jsx";
+import MainHeader from "./components/MainHeader/MainHeader.jsx";
+import Login from "./components/Login/Login.jsx";
+
+export const ThemeContext = createContext(null);
 
 const App = () => {
+  const [loggedIn, setLoggedIn] = useState(() => {
+    if (JSON.parse(localStorage.getItem("isLoggedUser")) !== null) {
+      return JSON.parse(localStorage.getItem("isLoggedUser")).isLogged;
+    } else {
+      return false;
+    }
+  });
+  console.log(loggedIn);
+
+  useEffect(() => {
+    const storedLoggedUserData = JSON.parse(
+      localStorage.getItem("isLoggedUser"),
+    );
+    if (storedLoggedUserData !== null) {
+      if (storedLoggedUserData.isLogged === true) {
+        setLoggedIn(true);
+      }
+    }
+  }, []);
+
+  const loginHandler = (user, password) => {
+    const loggedUser = localStorage.setItem(
+      "isLoggedUser",
+      JSON.stringify({
+        username: user,
+        isLogged: true,
+      }),
+    );
+    setLoggedIn(true);
+  };
+
   const [filteredYear, setFilteredYear] = useState("2025");
   const [expenses, setExpenses] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -75,17 +116,29 @@ const App = () => {
     setFilteredYear(selectedYear);
   };
 
+  const logoutHandler=() => {
+    localStorage.removeItem('isLoggedUser')
+    setLoggedIn(false)
+  }
+
   return (
     <div className="App">
-      {showError && <Error title={error.title} message={error.message} />}
-      <NewExpense onAddExpense={addExpenseHandler} />
+      <MainHeader isAuthenticated={loggedIn} onLogout={logoutHandler} />
+      <main>
+        {!loggedIn && <Login onLogin={loginHandler}/>}
+        {loggedIn && <Home/>}
+      </main>
+      <div>
+        {showError && <Error title={error.title} message={error.message} />}
+        <NewExpense onAddExpense={addExpenseHandler} />
 
-      <Expenses
-        expenses={expenses}
-        isLoading={isFetching}
-        selected={filteredYear}
-        onChangeFilter={filterChangeHandler}
-      />
+        <Expenses
+          expenses={expenses}
+          isLoading={isFetching}
+          selected={filteredYear}
+          onChangeFilter={filterChangeHandler}
+        />
+      </div>
     </div>
   );
 };

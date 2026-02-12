@@ -12,10 +12,17 @@ import MainHeader from "./components/MainHeader/MainHeader.jsx";
 import Login from "./components/Login/Login.jsx";
 import Home from "./components/Home/Home.jsx";
 import AuthContext from "./components/store/auth-context.jsx";
+import Page from "./components/UI/Page.jsx";
 
 export const ThemeContext = createContext(null);
 
 const App = () => {
+  const [theme, setTheme] = useState("dark");
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+
   const [loggedIn, setLoggedIn] = useState(() => {
     if (JSON.parse(localStorage.getItem("isLoggedUser")) !== null) {
       return JSON.parse(localStorage.getItem("isLoggedUser")).isLogged;
@@ -23,7 +30,7 @@ const App = () => {
       return false;
     }
   });
-  console.log(loggedIn);
+  //console.log(loggedIn);
 
   useEffect(() => {
     const storedLoggedUserData = JSON.parse(
@@ -124,31 +131,33 @@ const App = () => {
   };
 
   return (
-    <AuthContext.Provider value={
-      {
-        loggedIn: loggedIn,
-        onLogout: logoutHandler
-      }
-    }>
-    <div className="App">
-      <MainHeader onLogout={logoutHandler} />
-      <main>
-        {!loggedIn && <Login onLogin={loginHandler} />}
-        {loggedIn && <Home />}
-      </main>
-      <div>
-        {showError && <Error title={error.title} message={error.message} />}
-        <NewExpense onAddExpense={addExpenseHandler} />
+    <Page theme={theme} onToggleTheme={toggleTheme}>
+      <AuthContext.Provider
+        value={{
+          loggedIn: loggedIn,
+          onLogout: logoutHandler,
+        }}
+      >
+        <div className="App">
+          <MainHeader onLogout={logoutHandler} />
+          <main>
+            {!loggedIn && <Login onLogin={loginHandler} />}
+            {loggedIn && <Home />}
+          </main>
+          <div>
+            {showError && <Error title={error.title} message={error.message} />}
+            <NewExpense onAddExpense={addExpenseHandler} />
 
-        <Expenses
-          expenses={expenses}
-          isLoading={isFetching}
-          selected={filteredYear}
-          onChangeFilter={filterChangeHandler}
-        />
-      </div>
-    </div>
-    </AuthContext.Provider>
+            <Expenses
+              expenses={expenses}
+              isLoading={isFetching}
+              selected={filteredYear}
+              onChangeFilter={filterChangeHandler}
+            />
+          </div>
+        </div>
+      </AuthContext.Provider>
+    </Page>
   );
 };
 

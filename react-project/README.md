@@ -1,20 +1,13 @@
 # React + Vite
 
-Pooleli ülesanne 13. juhend 19 lehekülg 8 tegemata
-
 Start program
 "npm run dev"
-
-Sulge programm
-"control + C"
 
 Start Backend server
 npm start
 
-
-
-React hook = special function
-useState() = on of react hooks.
+Sulge programm
+"control + C"
 
 function MyComponent
 

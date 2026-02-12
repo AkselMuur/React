@@ -60,9 +60,9 @@ const Login = (props) => {
 
   useEffect(() => {
     const timeOut = setTimeout(() => {
-      console.log("check form is valid");
+      //console.log("check form is valid");
       setFormIsValid(emailState.isValid && passwordState.isValid);
-      console.log("checked");
+      //console.log("checked");
     }, 500);
     return () => {
       clearTimeout(timeOut);

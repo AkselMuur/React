@@ -97,12 +97,14 @@ body {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
-#app.light {
+#app.light,
+body.light {
   background: linear-gradient(#e5d9f1, #e5d9f1);
   color: #180d27;
 }
 
-#app.dark {
+#app.dark,
+body.dark {
   background: linear-gradient(#341f4f, #2a0c52);
   color: #e5d9f1;
 }

@@ -1,17 +1,18 @@
-import Header from './Header.jsx';
+import { useContext, useEffect } from "react";
+import ThemeContext from "../store/theme.jsx";
 
-const Page=(props) => {
-    return (
-        <div id='app' className={props.theme}>
-            <Header/>
-            <article>
-                <h2>React Course</h2>
-                <p>
-                    A course that teaches you React.
-                </p>
-            </article>
-        </div>
-    );
-}
+const Page = ({ children }) => {
+  const { theme } = useContext(ThemeContext);
 
-export default Page
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
+
+  return (
+    <div id="app" className={theme}>
+      {children}
+    </div>
+  );
+};
+
+export default Page;

@@ -1,10 +1,5 @@
-import {
-  useState,
-  useEffect,
-  createContext,
-  useContext,
-  Fragment,
-} from "react";
+import { useState, useEffect, useContext } from "react";
+
 import Expenses from "./components/Expenses/Expenses.jsx";
 import NewExpense from "./components/NewExpense/NewExpense.jsx";
 import Error from "./components/UI/Error.jsx";
@@ -14,44 +9,41 @@ import Home from "./components/Home/Home.jsx";
 import AuthContext from "./components/store/auth-context.jsx";
 import Page from "./components/UI/Page.jsx";
 
-export const ThemeContext = createContext(null);
+import { ThemeProvider } from "./components/store/theme.jsx";
+import ThemeContext from "./components/store/theme.jsx";
 
 const App = () => {
-  const [theme, setTheme] = useState("dark");
+  return (
+    <ThemeProvider>
+      <InnerApp />
+    </ThemeProvider>
+  );
+};
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
+const InnerApp = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   const [loggedIn, setLoggedIn] = useState(() => {
-    if (JSON.parse(localStorage.getItem("isLoggedUser")) !== null) {
-      return JSON.parse(localStorage.getItem("isLoggedUser")).isLogged;
-    } else {
-      return false;
-    }
+    const stored = JSON.parse(localStorage.getItem("isLoggedUser"));
+    return stored?.isLogged || false;
   });
-  //console.log(loggedIn);
 
   useEffect(() => {
-    const storedLoggedUserData = JSON.parse(
-      localStorage.getItem("isLoggedUser"),
-    );
-    if (storedLoggedUserData !== null) {
-      if (storedLoggedUserData.isLogged === true) {
-        setLoggedIn(true);
-      }
-    }
+    const stored = JSON.parse(localStorage.getItem("isLoggedUser"));
+    if (stored?.isLogged) setLoggedIn(true);
   }, []);
 
   const loginHandler = (user, password) => {
-    const loggedUser = localStorage.setItem(
+    localStorage.setItem(
       "isLoggedUser",
-      JSON.stringify({
-        username: user,
-        isLogged: true,
-      }),
+      JSON.stringify({ username: user, isLogged: true }),
     );
     setLoggedIn(true);
+  };
+
+  const logoutHandler = () => {
+    localStorage.removeItem("isLoggedUser");
+    setLoggedIn(false);
   };
 
   const [filteredYear, setFilteredYear] = useState("2025");
@@ -66,13 +58,11 @@ const App = () => {
 
       try {
         const response = await fetch("http://localhost:8001/expenses");
-        const responseData = await response.json();
+        const data = await response.json();
 
-        if (!response.ok) {
-          throw new Error("Failed fetching data");
-        }
+        if (!response.ok) throw new Error("Failed fetching data");
 
-        setExpenses(responseData.expenses);
+        setExpenses(data.expenses);
       } catch (error) {
         setError({
           title: "An error occurred!",
@@ -97,16 +87,10 @@ const App = () => {
         const response = await fetch("http://localhost:8001/add-expense", {
           method: "POST",
           body: JSON.stringify(expense),
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         });
 
-        const responseData = await response.json();
-
-        if (!response.ok) {
-          throw new Error("Failed saving data");
-        }
+        if (!response.ok) throw new Error("Failed saving data");
 
         setExpenses((prev) => [expense, ...prev]);
       } catch (error) {
@@ -121,43 +105,36 @@ const App = () => {
     addExpense();
   };
 
-  const filterChangeHandler = (selectedYear) => {
-    setFilteredYear(selectedYear);
-  };
-
-  const logoutHandler = () => {
-    localStorage.removeItem("isLoggedUser");
-    setLoggedIn(false);
+  const filterChangeHandler = (year) => {
+    setFilteredYear(year);
   };
 
   return (
-    <Page theme={theme} onToggleTheme={toggleTheme}>
-      <AuthContext.Provider
-        value={{
-          loggedIn: loggedIn,
-          onLogout: logoutHandler,
-        }}
-      >
-        <div className="App">
-          <MainHeader onLogout={logoutHandler} />
-          <main>
-            {!loggedIn && <Login onLogin={loginHandler} />}
-            {loggedIn && <Home />}
-          </main>
-          <div>
-            {showError && <Error title={error.title} message={error.message} />}
-            <NewExpense onAddExpense={addExpenseHandler} />
+    <AuthContext.Provider value={{ loggedIn, onLogout: logoutHandler }}>
+      <Page>
+        <button onClick={toggleTheme} style={{ margin: "1rem" }}>
+          {theme === "dark" ? "Light Mode" : "Dark Mode"}
+        </button>
 
-            <Expenses
-              expenses={expenses}
-              isLoading={isFetching}
-              selected={filteredYear}
-              onChangeFilter={filterChangeHandler}
-            />
-          </div>
-        </div>
-      </AuthContext.Provider>
-    </Page>
+        <MainHeader onLogout={logoutHandler} />
+
+        <main>
+          {!loggedIn && <Login onLogin={loginHandler} />}
+          {loggedIn && <Home />}
+        </main>
+
+        {showError && <Error title={error.title} message={error.message} />}
+
+        <NewExpense onAddExpense={addExpenseHandler} />
+
+        <Expenses
+          expenses={expenses}
+          isLoading={isFetching}
+          selected={filteredYear}
+          onChangeFilter={filterChangeHandler}
+        />
+      </Page>
+    </AuthContext.Provider>
   );
 };
 
